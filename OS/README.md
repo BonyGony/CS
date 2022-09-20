@@ -278,9 +278,66 @@
   - cpu 점유 시간이 가장 짧은 프로세스에 먼저 할당.
   - 실행 시간이 긴 프로세스는 순위가 밀려 기아 상태에 빠질 수 있음.
 - HRN(Highest Response-ratio Next)
+
   - 실행시간이 긴 프로세스에 불리한 SJF를 보완하기 위한 기법
   - 대기 시간과 서비스 시간을 이용하는 방식
   - 우선순위 : (대기시간+서비스시간)/서비스시간
   - 우선순위 높은 것부터 실행
   - 프로세스가 자원을 기다리는 시간에 비례하여 우선순위를 부여함으로 무한 연기 문제 방지
     - 에이징 기법
+
+- 요즘 사용하는 스케줄링 기법
+- sync async
+- blocking nonblocking
+
+# 6. Blocking VS Non-Blocking, Synchronous VS Asynchronous
+
+- Blocking VS Non-Blocking
+
+  - Blocking
+    - I/O 작업은 user level에서 직접 수행할 수 없고 kernel level로 들어가야 한다. 따라서 user level에서 kernel level로system call을 보내서 I/O 작업을 수행한다.
+    - 이때, application 단의 스레드에 block이 걸린다. 그리고 kernel level에서 해당 I/O 작업이 끝나고 데이터를 반환하면 그때서야 application 단의 스레드에 걸렸던 block이 풀린다.
+    - 즉, application 단에서는 아무런 동작도 안하는 것처럼 보이는 것이다.
+    - 단점
+      - cpu 낭비가 심함.
+  - Non-Blocking
+    - 앞에서 설명한 blocking I/O 방식과 다르게, Non-blocing I/O 방식은 kernel level에서 I/O 작업을 수행하는 동안 user 단의 작업을 중단시키지 않는다.
+    - 즉, user가 system call을 보내면 kernel에서는 일단 바로 결과를 반환한다.
+    - 여기서 반환하는 값은 그 순간 가져올 수 있는 데이터에 해당한다. 이후에 계속적으로 가져올 수 있는 데이터를 축적한다.
+    - 단점
+      - 가져올 수 있는 데이터를 축적하는 과정에서 user level에서 원하는 사이즈가 되었는지 계속해서 확인해줘야 한다.(polling) 이 과정에서 수많은 클라이언트의 요청이 동시 다발적으로 일어나면 cpu에 부담이 될 수 있다.
+
+- Synchronous VS Asynchronous
+
+  - Synchronous
+    - system call이 끝날때까지 기다리고 결과물을 가져온다.
+  - Asynchronous
+    - system call이 완료되지 않아도 기다리지 않는다. 나중에 완료가 되면 그때 결과물을 가져온다.
+
+- Blocking VS Synchronous
+
+  - Blocking
+    - 시스템의 반환을 기다리는 동안 waiting queue에 머무는 것이 필수, 호출된 함수가 자신의 작업을 모두 마칠 때까지 호출한 함수에게 제어권을 넘겨주지 않고 대기하게 만들면 blocking
+  - Synchronous
+    - 시스템의 반환을 기다리는 동안 waiting queue에 머무는 것이 필수가 아님, 호출하는 함수가 호출되는 함수의 작업 완료 후 리턴을 기다리거나, 또는 호출되는 함수로부터 바로 리턴 받더라도 작업 완료 여부를 호출하는 함수 스스로 계속 확인하며 신경쓰면 synchronous
+  - 공통점
+    - 둘다 시스템의 반환을 기다린다는 측면에서 같은 개념
+
+- queue
+
+  - 스케줄링을 위해 os가 지원한는 것
+  - Linked List로 구성
+  - job queue
+    - 프로세스가 시스템에 처음 들어와 대기하는 큐
+  - ready queue
+    - 주기억 장치에서 적재되어 실행을 기다리는 프로세스를 유지하는 큐
+  - device queue
+    - 장치를 사용하기 위해 기다리는 큐
+  - waiting queue
+    - 특정한 event마다 대기하는 프로세스를 유지시켜주는 큐
+
+- Non-Blocking VS Asynchronous
+  - Non-Blocking
+    - system call이 반환될 때 실행된 결과와 함께 반환되지 않는 경우, 호출된 함수가 바로 리턴해서 호출한 함수에게 제어권을 넘겨주고, 호출한 함수가 다른 일을 할 수 있는 기회를 줄 수 있으면 Non-Blocking
+  - Asynchronous
+    - system call이 반환될 때 실행된 결과와 함께 반환될 경우, 호출되는 함수에게 callback을 전달해서, 호출되는 함수의 작업이 완료되면 호출되는 함수가 전달받은 callback을 실행하고, 호출하는 함수는 작업 완료 여부를 신경쓰지 않으면 Asynchronous
