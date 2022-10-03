@@ -366,3 +366,8 @@
   - Peterson's Algorithm은 이전의 알고리즘 1과 2를 합쳐놓은 개념이다. turn 변수와 flag 변수를 동시에 사용한다.
   - Mutual Exclusion, Progress, Bounded waiting 모두 만족한다.
   - Critical Section 진입을 기다리면서 계속 CPU와 메모리를 사용하는 Busy Waiting의 문제점
+
+## Synchronization Hardware
+
+- 하드웨어적으로 현재 상태를 확인하고 변경하는 Test & modify를 atomic 하게 수행할 수 있도록 지원하면 Critical Section Problem은 간단히 해결할 수 있다.
+- 하지만 이러한 하드웨어적인 명령어는 bounded waiting 조건을 만족하지 못하는 단점이 있다.
