@@ -353,3 +353,16 @@
       - Critical Section에서 작업 중인 프로세스가 없다면, Critical Section에 진입하고자 하는 프로세스가 존재하는 경우 진입할 수 있어야 한다.
     - Bounded Waiting(한정 대기)
       - 프로세스가 Critical Section에 들어가기 위해 요청한 후부터 그 요청이 허용될 때까지 다른 프로세스들이 Critical Section에 들어가는 횟수에 한계가 있어야 한다. 쉽게 말해, Critical Section에 진입하려는 프로세스가 무한정 기다려서는 안 된다.
+
+## Synchronization Algorithms
+
+- Synchronization Variable
+  - 현재 Critical Section에 들어갈 프로세스가 어떤 프로세스인지를 한 변수로 나타내어 일치하는 프로세스만 진입하도록 하는 단순한 방식이다.
+  - Mutual Exclusion은 만족하지만 Progress는 만족하지 못한다.
+- Synchronization Variable
+  - 특정 프로세스가 Critical Section에 진입할 준비가 되었다는 것을 나타내는 변수를 두어, 다른 프로세스가 Critical Section에 진입하려고 한다면 현재 프로세스는 기다리는 방법이다.
+  - Mutual Exclusion은 만족하지만 Progress는 만족하지 못한다.
+- Peterson's Algorithms
+  - Peterson's Algorithm은 이전의 알고리즘 1과 2를 합쳐놓은 개념이다. turn 변수와 flag 변수를 동시에 사용한다.
+  - Mutual Exclusion, Progress, Bounded waiting 모두 만족한다.
+  - Critical Section 진입을 기다리면서 계속 CPU와 메모리를 사용하는 Busy Waiting의 문제점
